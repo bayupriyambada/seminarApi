@@ -1,4 +1,7 @@
 const Image = require('../../api/v1/images/model')
+const { notFound } = require('../../Validators/errors');
+
+// tambahkan function checking Image 
 
 const createImage = async (req) => {
   const result = await Image.create({
@@ -8,9 +11,12 @@ const createImage = async (req) => {
   return result;
 }
 
-const generateImage = async (req) => {
-  const result = `uploads/${req.file.filename}`;
-  return result;
+const checkingImage = async (id) => {
+  const result = await Image.findOne({ _id: id });
+  if (!result) {
+    throw new notFound(`Tidak ada gambar dengan id: ${id}`)
+  }
+  return result
 }
 
-module.exports = { createImage, generateImage }
+module.exports = { createImage, checkingImage }
